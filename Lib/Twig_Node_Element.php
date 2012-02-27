@@ -64,11 +64,12 @@ class Twig_Node_Element extends Twig_Node {
  *
  * @param Twig_Node_Expression $expr 
  * @param Twig_Node_Expression $variables 
+ * @param bool $only
  * @param string $lineno 
  * @param string $tag 
  */
-	public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $lineno, $tag = null) {
-		parent::__construct(array('expr' => $expr, 'variables' => $variables), array(), $lineno, $tag);
+	public function __construct(Twig_Node_Expression $expr, Twig_Node_Expression $variables = null, $only = false, $lineno, $tag = null) {
+		parent::__construct(array('expr' => $expr, 'variables' => $variables), array('only' => (Boolean) $only), $lineno, $tag);
 	}
 
 /**
@@ -78,18 +79,20 @@ class Twig_Node_Element extends Twig_Node {
  */
 	public function compile(Twig_Compiler $compiler) {
 		$compiler->addDebugInfo($this);
-		if ($this->expr instanceof Twig_Node_Expression_Constant) {
-			$value = 'elements' . DS . $this->expr->offsetGet('value') . '.tpl';
-			$this->expr->offsetSet('value', $value);
 
+		$template = $this->getNode('expr')->getAttribute('value');
+		$value = 'Elements' . DS . $template . '.tpl';
+		$this->getNode('expr')->setAttribute('value', $value);
+
+		if ($this->getNode('expr') instanceof Twig_Node_Expression_Constant) {
 			$compiler
 				->write("\$this->env->loadTemplate(")
-				->subcompile($this->expr)
+				->subcompile($this->getNode('expr'))
 				->raw(")->display(");
 		} else {
 			$compiler
 				->write("\$template = ")
-				->subcompile($this->expr)
+				->subcompile($this->getNode('expr'))
 				->raw(";\n")
 				->write("if (!\$template")
 				->raw(" instanceof Twig_Template) {\n")
@@ -100,11 +103,23 @@ class Twig_Node_Element extends Twig_Node {
 				->write('$template->display(');
 		}
 
-		if (null === $this->variables) {
-			$compiler->raw('$context');
+		if (false === $this->getAttribute('only')) {
+			if (null === $this->getNode('variables')) {
+				$compiler->raw('$context');
+			} else {
+				$compiler
+					->raw('array_merge($context, ')
+					->subcompile($this->getNode('variables'))
+					->raw(')');
+			}
 		} else {
-			$compiler->subcompile($this->variables);
+			if (null === $this->getNode('variables')) {
+				$compiler->raw('array()');
+			} else {
+				$compiler->subcompile($this->getNode('variables'));
+			}
 		}
+
 		$compiler->raw(");\n");
 	}
 }
