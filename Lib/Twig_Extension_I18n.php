@@ -1,12 +1,5 @@
 <?php
 /**
- * Wrapper to __()
- */
-function cakeI18nFunction($var) {
-	return __($var);
-}
-
-/**
  * This file is part of Twig.
  *
  * (c) 2010 Fabien Potencier
@@ -36,7 +29,7 @@ class Twig_Extension_I18n extends Twig_Extension {
  * @return array An array of filters
  */
 	public function getFilters() {
-		return array('trans' => new Twig_Filter_Function('cakeI18nFunction'));
+		return array('trans' => new Twig_Filter_Function('__'));
 	}
 
 /**
