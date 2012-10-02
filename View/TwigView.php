@@ -126,7 +126,7 @@ class TwigView extends View {
 			$loaded_helpers = $this->Helpers->attached();
 			foreach($loaded_helpers as $helper) {
 				$name = Inflector::variable($helper);
-				$helpers[$name] =& $this->loadHelper($helper);
+				$helpers[$name] = $this->loadHelper($helper);
 			}
 
 			$data = array_merge($___dataForView, $helpers);	
