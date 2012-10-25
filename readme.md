@@ -13,6 +13,10 @@ Alternatively: Just clone the repository directly into your app.
 	$ cd app/Plugin
 	$ git clone git://github.com/predominant/TwigView.git TwigView
 
+Or, add it as a submodule.
+
+	$ git submodule add git://github.com/predominant/TwigView.git app/Plugin/TwigView
+
 ### Vendor Files ###
 
 Download the [Twig Library](http://www.twig-project.org/) and move `(archive)/*` to `APP/Plugin/TwigView/Vendor/Twig`.
