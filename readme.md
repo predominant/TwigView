@@ -111,7 +111,7 @@ Elements must be `.tpl` files and are parsed as Twig templates. Using `.ctp` is 
 
 In exchange for this limitation you can import elements as easy as this:
 
-	{{ element 'sidebar/about' }}
+	{% element 'sidebar/about' %}
 
 ## Translating Strings ##
 
