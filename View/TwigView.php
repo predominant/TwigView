@@ -100,6 +100,7 @@ class TwigView extends View {
 		if (isset($Controller->theme)) {
 			$this->theme = $Controller->theme;
 		}
+		$this->ext = '.tpl';
 	}
 
 /**
