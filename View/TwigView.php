@@ -80,7 +80,19 @@ class TwigView extends View {
  */
 	public function __construct(Controller $Controller = null) {
 		$this->templatePaths = App::path('View');
-		$loader = new Twig_Loader_Filesystem($this->templatePaths[0]);
+
+		/**
+		 * Load paths for plugins views
+		 */
+		$plugins = CakePlugin::loaded();
+		foreach($plugins as $plugin) {
+			if(file_exists(end(App::path('View', $plugin)))) {
+				$this->templatePaths[] = end(App::path('View', $plugin));
+			}
+		}
+
+		$loader = new Twig_Loader_Filesystem($this->templatePaths);
+
 		$this->Twig = new Twig_Environment($loader, array(
 			'cache' => TWIG_VIEW_CACHE,
 			'charset' => strtolower(Configure::read('App.encoding')),
